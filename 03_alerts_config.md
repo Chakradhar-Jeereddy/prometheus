@@ -1,19 +1,21 @@
 # Alerts
 => https://samber.github.io/awesome-prometheus-alerts/
-- all alerts are in above URL, keep it handy.
+- All alerts are in above URL, keep it handy to use pre-defined alerts.
 
 - Alerts in prometheus are defined in yaml files in promql format.
-- We declare threshold close to the point of choas or point of unprediction.
+- We declare threshold close to the point of choas or point of un predictions.
 - The yaml files should be on premetheus server.
-- The promsql is constantly beign evavluated and when value returns one, non-empty result. We get alert.
-- Once the alert is generated, it will appear on UI under alerts tab, but no notification is sent through ticket or email.
-- For notification, we need a component calld alert manager.
-- Alert manager gets the signal from prometheus and converts into format suitable for target (email, sclak, webhook,pagerduty).
+- The promsql expressions are constantly evavluated(default 1min) and when epression returns Zero/empty result. We get alert.
+- When an alert is generated, it will appear on UI under alerts tab, but no notification is sent through ticket or email.
+- For notification, we need alertmanager component.
+- Alertmanager gets signal from prometheus and converts into format suitable for target (email, sclak, webhook,pagerduty).
 - We normally configure two premetheus servers for HA. Both gets alters from node exporter.
-- Alert manger when it gets two signals, it will aggregate and send only once.
+- Alertmanger aggregates two signals into one and send one notification.
+
+## Prometheus configuration files
+- /etc/prometheus/prometheus.yaml file
 
 ```
-/etc/prometheus/prometheus.yaml file
   scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
   # scrape_timeout is set to the global default (10s).

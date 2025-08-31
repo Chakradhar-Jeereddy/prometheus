@@ -10,3 +10,4 @@
 
 - Recording rules are used aggregate data at certian interval with "rate parameter"
 - Add above rules to /etc/prometheus/rules/<file_name>
+- Now restart prometheus to load the rule files and query "cpu:node_cpu_seconds_total:avg" in query browser.

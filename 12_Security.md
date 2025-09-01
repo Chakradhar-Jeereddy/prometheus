@@ -104,4 +104,13 @@ WantedBy=multi-user.target
 
 ## Enabling SSL for alert manager
 - Follow the same procedure as nodeexporter.
-
+```
+- job_name: "node_exporter"
+  scheme: https
+  tls_config:
+    ca_file: /usr/local/etc/prom.crt
+    server_name: 'localhost'
+  basic_auth:
+    username: admin
+    password: password
+```

@@ -53,3 +53,55 @@ http://138.197.21.170:9090
 Username:
 Password:
 
+#################################################################
+## Enabling https for prometheus
+- Genarate cert and key under /etc/prometheus and change ownership to prem user
+```
+  openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout node_exporter.key -out node_exporter.crt -subj "/C=BE/ST=Antwerp/L=Brasschaat/O=Inuits/CN=localhost"
+```
+- Update web.yml file with tls configuration
+```
+tls_server_config:
+  cert_file: prom.crt
+  key_file: prom.key
+basic_auth_users:
+  admin: $2y$10$LTEVXpevnuTGT9Dtc18on.fQsqBhi.qtfGTbrxxWzIOyD511NbACm
+```
+
+- Restart prometheus.
+  systemctl restart prometheus
+#########################################################################################
+## Enabling HTTPS communication between prometheus and exporter.
+- create cert and key files using openssl, create web.yml file and put the tls entries.
+- Update the nodeexporter service file with the web.yml
+```
+root@prometh:/etc/node# ls
+prom.crt  prom.key  web.yml
+root@prometh:/etc/node# cat web.yml
+tls_server_config:
+  cert_file: prom.crt
+  key_file: prom.key
+
+[Unit]
+Description=Prometheus Node Exporter
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prem
+Group=prem
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/var/lib/node/node_exporter  --web.config.file=/etc/node/web.yml
+
+SyslogIdentifier=prometheus_node_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Enabling SSL for alert manager
+- Follow the same procedure as nodeexporter.
+
